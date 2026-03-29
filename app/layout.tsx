@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
+import Script from "next/script"; // ✅ Added
 
 export const metadata: Metadata = {
   title: "GenifyAi — Create. Generate. Go Viral.",
@@ -48,6 +49,20 @@ export default function RootLayout({
           <main className="pt-20">{children}</main>
           <Footer />
         </div>
+
+        {/* 🔥 Google Analytics (Added) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-437W4CGWTE"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-script" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-437W4CGWTE');
+          `}
+        </Script>
 
         <Toaster
           position="bottom-right"
