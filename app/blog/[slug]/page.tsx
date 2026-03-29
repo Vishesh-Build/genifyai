@@ -8,8 +8,9 @@ export async function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = getBlogPost(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
   if (!post) return { title: "Post Not Found" };
   return {
     title: `${post.title} | GenifyAI Blog`,
@@ -89,8 +90,9 @@ const faqs: Record<string, { q: string; a: string }[]> = {
   ],
 };
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
   if (!post) notFound();
 
   const postFaqs = faqs[post.slug] || [];
@@ -104,7 +106,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         {/* Back */}
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-violet-400 transition-colors mb-8">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           Back to Blog
         </Link>
@@ -182,7 +184,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                   <p className="text-white text-sm font-medium group-hover:text-violet-300 transition-colors">{p.title}</p>
                 </div>
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="text-slate-600 group-hover:text-violet-400 shrink-0 ml-3">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </Link>
             ))}
